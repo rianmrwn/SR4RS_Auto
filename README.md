@@ -29,6 +29,7 @@ python SR4RS_Auto/running_sr4rs.py --load 'MASUKAN NAMA FILE HASIL DOWNLOAD'.tif
 2. Link GDrive File adalah pada Share-->Copy Link
 3. Download File melalui Google Drive adalah bersifat optional, boleh menggunakan file hosting lainnya (bisa menggunakan command 'wget')
 4. Resource yang dibutuhkan cukup besar untuk downloading model
+5. Downloader GDrive terbatas dengan ukuran maksimal adalah 100MB
 
 ## How to use? (Original)
 
