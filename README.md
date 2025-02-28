@@ -7,34 +7,23 @@ You can add your own models, cost functions, feel free to open a PR!
 
 http://doi.org/10.5334/jors.369
 
+## Cara Pakai (Automatic Download and Running)
+
+1. Masuk Docker Desktop
+2. Buka Terminal
+3. Running code ini:
 ```
-@article{cresson2022sr4rs,
-  title={SR4RS: A Tool for Super Resolution of Remote Sensing Images},
-  author={Cresson, R{\'e}mi},
-  journal={Journal of Open Research Software},
-  volume={10},
-  number={1},
-  year={2022},
-  publisher={Ubiquity Press}
-}
+docker run -ti --runtime=nvidia mdl4eo/otbtf:3.4.0-gpu bash
+```
+4. Untuk Download File dari GDrive:
+```
+python SR4RS_Auto/drive_downloader.py --url 'GANTI URL DISINI' --save 'GANTI NAMA FILE DISINI'.tif
+``` 
+5. Jalankan Processing
+```
+python SR4RS_Auto/running_sr4rs.py --load 'MASUKAN NAMA FILE HASIL DOWNLOAD'.tif --saving 'GANTI NAMA FILE OUTPUT'.tif
 ```
 
-## Super Resolution for Remote Sensing
-
-This work has been supported by the Programme National de Télédétection Spatiale ([PNTS](http://programmes.insu.cnrs.fr/pnts/)), grant n° PNTS-2020-07 
-
-<img src ="doc/logos.jpg" />
-
-## Representative images
-
-The following are Sentinel-2 images processed with a model trained from pansharpened Spot-6/7 images.
-<img src ="doc/c3.jpg" />
-<img src ="doc/c2.jpg" />
-<img src ="doc/c1.jpg" />
-
-## Read more
-
-Blog post on [MDL4EO](https://mdl4eo.irstea.fr/2019/03/29/enhancement-of-sentinel-2-images-at-1-5m/)
 
 ## How to use?
 
