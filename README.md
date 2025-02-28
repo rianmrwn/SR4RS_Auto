@@ -25,7 +25,7 @@ python SR4RS_Auto/running_sr4rs.py --load 'MASUKAN NAMA FILE HASIL DOWNLOAD'.tif
 ```
 
 
-## How to use?
+## How to use? (Original)
 
 SR4RS needs **OTBTF>=2.3** to work.
 
