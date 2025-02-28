@@ -1,22 +1,18 @@
 import argparse
-import re
 import subprocess
 
-def extract_file_id(url):
-    match = re.search(r'/d/([a-zA-Z0-9_-]+)', url)
-    if not match:
-        raise ValueError("Invalid Google Drive URL")
-    return match.group(1)
+def download_and_unzip_model():
+    subprocess.run(['wget', 'https://nextcloud.inrae.fr/s/boabW9yCjdpLPGX/download/sr4rs_sentinel2_bands4328_france2020_savedmodel.zip'])
+    subprocess.run(['unzip', 'sr4rs_sentinel2_bands4328_france2020_savedmodel.zip'])
 
-def download_file(file_id, filename):
-    download_url = f'https://docs.google.com/uc?export=download&id={file_id}'
-    subprocess.run(['wget', '--no-check-certificate', download_url, '-O', filename])
+def run_sr_script(input_file, output_file):
+    subprocess.run(['python', 'sr4rs/code/sr.py', '--savedmodel', 'sr4rs_sentinel2_bands4328_france2020_savedmodel', '--input', input_file, '--output', output_file])
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Google Drive Downloader')
-    parser.add_argument('--url', required=True, help='Google Drive file URL')
-    parser.add_argument('--save', required=True, help='Filename to save as')
+    parser = argparse.ArgumentParser(description='Automate Docker and Python workflow')
+    parser.add_argument('--load', required=True, help='Input file')
+    parser.add_argument('--saving', required=True, help='Output file')
     args = parser.parse_args()
 
-    file_id = extract_file_id(args.url)
-    download_file(file_id, args.save)
+    download_and_unzip_model()
+    run_sr_script(args.load, args.saving)
