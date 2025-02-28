@@ -24,6 +24,11 @@ python SR4RS_Auto/drive_downloader.py --url 'GANTI URL DISINI' --save 'GANTI NAM
 python SR4RS_Auto/running_sr4rs.py --load 'MASUKAN NAMA FILE HASIL DOWNLOAD'.tif --saving 'GANTI NAMA FILE OUTPUT'.tif
 ```
 
+## Catatan
+1. File Input haruslah hanya memiliki 4 Band (4,3,2,8)
+2. Link GDrive File adalah pada Share-->Copy Link
+3. Download File melalui Google Drive adalah bersifat optional, boleh menggunakan file hosting lainnya (bisa menggunakan command 'wget')
+4. Resource yang dibutuhkan cukup besar untuk downloading model
 
 ## How to use? (Original)
 
