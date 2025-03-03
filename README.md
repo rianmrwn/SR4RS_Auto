@@ -31,6 +31,12 @@ python SR4RS_Auto/running_sr4rs.py --load 'MASUKAN NAMA FILE HASIL DOWNLOAD'.tif
 3. Download File melalui Google Drive adalah bersifat optional, boleh menggunakan file hosting lainnya (bisa menggunakan command 'wget')
 4. Resource yang dibutuhkan cukup besar untuk downloading model
 5. Downloader GDrive terbatas dengan ukuran maksimal adalah 100MB
+6. Jika ingin melakukan processing lainnya tanpa melakukan download model (jika model sudah didownload) lagi bisa menggunakan command:
+```
+python SR4RS_Auto/code/sr.py --savedmodel sr4rs_sentinel2_bands4328_france2020_savedmodel --input 'MASUKAN NAMA FILE HASIL DOWNLOAD'.tif --output 'GANTI NAMA FILE OUTPUT'.tif
+```
+7. Checking file pada docker SSH menggunakan dir
+
 
 ## How to use? (Original)
 
