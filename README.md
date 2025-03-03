@@ -15,7 +15,8 @@ http://doi.org/10.5334/jors.369
 ```
 docker run -ti --runtime=nvidia mdl4eo/otbtf:3.4.0-gpu bash
 ```
-4. Untuk Download File dari GDrive:
+4. Clone GitHub ini!
+5. Untuk Download File dari GDrive:
 ```
 python SR4RS_Auto/drive_downloader.py --url 'GANTI URL DISINI' --save 'GANTI NAMA FILE DISINI'.tif
 ``` 
