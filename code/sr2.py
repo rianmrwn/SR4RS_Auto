@@ -24,6 +24,7 @@ import otbApplication
 import constants
 import logging
 import numpy as np
+import otbtf  # Add this import statement
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.WARNING,
                     datefmt='%Y-%m-%d %H:%M:%S')
