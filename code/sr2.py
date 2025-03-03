@@ -24,7 +24,6 @@ import otbApplication
 import constants
 import logging
 import numpy as np
-import otbtf  # Add this import statement
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.WARNING,
                     datefmt='%Y-%m-%d %H:%M:%S')
@@ -86,7 +85,7 @@ if __name__ == "__main__":
     logging.info("Using encoding %s", encoding)
 
     # Read input image and adjust channels to use bands 2, 3, 4, and 8
-    input_image = otbtf.read_as_np_arr(otbtf.gdal_open(params.input), False)
+    input_image = otbApplication.read_as_np_arr(otbApplication.gdal_open(params.input), False)
     input_image = adjust_channels(input_image, [1, 2, 3, 7])  # Bands are 0-indexed
 
     # call otbtf
