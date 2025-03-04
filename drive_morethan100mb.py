@@ -1,7 +1,7 @@
 import argparse
 import re
-import subprocess
 import requests
+import os
 
 def extract_file_id(url):
     match = re.search(r'/d/([a-zA-Z0-9_-]+)', url)
@@ -9,22 +9,29 @@ def extract_file_id(url):
         raise ValueError("Invalid Google Drive URL")
     return match.group(1)
 
-def download_file(file_id, filename):
-    # First, retrieve the confirmation token for large files
-    download_url = f'https://drive.google.com/uc?export=download&id={file_id}'
-    session = requests.Session()
-    
-    # Initial request to get confirmation token
-    response = session.get(download_url, stream=True)
+def get_confirm_token(response):
     for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            # Get the confirmation token (Google uses the 'confirm' parameter to bypass virus scan)
-            confirm_token = value
-            download_url = f'https://drive.google.com/uc?export=download&confirm={confirm_token}&id={file_id}'
-            break
+        if key.startswith("download_warning"):
+            return value
+    return None
+
+def download_file(file_id, filename):
+    session = requests.Session()
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+    response = session.get(url, stream=True)
+    token = get_confirm_token(response)
+
+    if token:
+        url = f"https://drive.google.com/uc?export=download"
+        response = session.get(url, params={'id': file_id, 'confirm': token}, stream=True)
+
+    with open(filename, "wb") as f:
+        for chunk in response.iter_content(32768):
+            if chunk:
+                f.write(chunk)
     
-    # Download the actual file with wget
-    subprocess.run(['wget', '--no-check-certificate', download_url, '-O', filename])
+    print(f"Download complete: {filename}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Google Drive Downloader')
