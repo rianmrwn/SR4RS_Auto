@@ -10,20 +10,27 @@ def extract_file_id(url):
     return match.group(1)
 
 def download_file(file_id, filename):
-    """Downloads a large file from Google Drive using curl."""
+    """Downloads a large file from Google Drive using curl, handling confirmation tokens."""
     
-    # Step 1: Get confirmation token
-    cmd_token = f'curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id={file_id}" | grep -o "confirm=[^&]*" | cut -d= -f2'
-    token = subprocess.getoutput(cmd_token).strip()
+    # Step 1: Get initial response and extract confirmation token
+    token_command = f'curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id={file_id}"'
+    token_response = subprocess.getoutput(token_command)
 
+    # Extract confirmation token
+    token_match = re.search(r'confirm=([0-9A-Za-z_-]+)', token_response)
+    token = token_match.group(1) if token_match else ""
+
+    # Step 2: Check if a token was found
     if not token:
-        print("❌ Error: Could not retrieve confirmation token. Check your link.")
-        return
+        print("❌ Error: Could not retrieve confirmation token. Trying without it...")
+        token_param = ""
+    else:
+        token_param = f'&confirm={token}'
 
-    # Step 2: Download the file with the token
-    download_cmd = f'curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download&confirm={token}&id={file_id}" -o "{filename}"'
-    subprocess.run(download_cmd, shell=True)
-    
+    # Step 3: Download the file
+    download_command = f'curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download{token_param}&id={file_id}" -o "{filename}"'
+    subprocess.run(download_command, shell=True)
+
     print(f"✅ Download complete: {filename}")
 
 if __name__ == "__main__":
