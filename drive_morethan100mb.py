@@ -1,44 +1,39 @@
 import argparse
 import re
-import requests
+import subprocess
 
 def extract_file_id(url):
-    match = re.search(r'/d/([a-zA-Z0-9_-]+)', url)
+    """Extracts the file ID from a Google Drive URL."""
+    match = re.search(r"/d/([a-zA-Z0-9_-]+)", url)
     if not match:
         raise ValueError("Invalid Google Drive URL")
     return match.group(1)
 
 def download_file(file_id, filename):
-    session = requests.Session()
-    base_url = "https://drive.google.com/uc?export=download"
-
-    # Step 1: Get initial response to check for large file confirmation
-    response = session.get(base_url, params={'id': file_id}, stream=True)
+    """Downloads a large file from Google Drive using curl."""
     
-    # Step 2: Get the confirmation token if needed
-    token = None
-    for key, value in response.cookies.items():
-        if key.startswith("download_warning"):
-            token = value
-            break
+    # Step 1: Get confirmation token
+    cmd_token = f'curl -sc /tmp/cookie "https://drive.google.com/uc?export=download&id={file_id}" | grep -o "confirm=[^&]*" | cut -d= -f2'
+    token = subprocess.getoutput(cmd_token).strip()
 
-    # Step 3: If there is a token, make a second request with the token
-    if token:
-        response = session.get(base_url, params={'id': file_id, 'confirm': token}, stream=True)
+    if not token:
+        print("❌ Error: Could not retrieve confirmation token. Check your link.")
+        return
 
-    # Step 4: Download the file in chunks
-    with open(filename, "wb") as f:
-        for chunk in response.iter_content(32768):  # 32KB chunks
-            if chunk:
-                f.write(chunk)
-
+    # Step 2: Download the file with the token
+    download_cmd = f'curl -Lb /tmp/cookie "https://drive.google.com/uc?export=download&confirm={token}&id={file_id}" -o "{filename}"'
+    subprocess.run(download_cmd, shell=True)
+    
     print(f"✅ Download complete: {filename}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Google Drive Downloader")
+    parser = argparse.ArgumentParser(description="Google Drive Large File Downloader")
     parser.add_argument("--url", required=True, help="Google Drive file URL")
     parser.add_argument("--save", required=True, help="Filename to save as")
     args = parser.parse_args()
 
-    file_id = extract_file_id(args.url)
-    download_file(file_id, args.save)
+    try:
+        file_id = extract_file_id(args.url)
+        download_file(file_id, args.save)
+    except Exception as e:
+        print(f"❌ Error: {e}")
